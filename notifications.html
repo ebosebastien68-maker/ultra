@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages Spirituels - Notifications</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #8B0000 0%, #DC143C 25%, #FF6347 50%, #FFD700 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            padding: 20px;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 192, 203, 0.2) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 50%, rgba(34, 139, 34, 0.2) 0%, transparent 50%);
+            animation: pulseAura 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulseAura {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.95), rgba(220, 20, 60, 0.95));
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3),
+                        0 0 40px rgba(255, 215, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: slideDown 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header::before {
+            content: '✧';
+            position: absolute;
+            font-size: 80px;
+            color: rgba(255, 215, 0, 0.15);
+            top: -15px;
+            right: 20px;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+            color: #FFD700;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+            font-weight: 800;
+        }
+
+        .header h1 i {
+            color: #FFD700;
+            animation: bellRing 2s ease-in-out infinite;
+        }
+
+        @keyframes bellRing {
+            0%, 100% { transform: rotate(0deg); }
+            10%, 30% { transform: rotate(-10deg); }
+            20%, 40% { transform: rotate(10deg); }
+            50% { transform: rotate(0deg); }
+        }
+
+        .mark-all-btn {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #8B0000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 800;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 13px;
+        }
+
+        .mark-all-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+            background: linear-gradient(135deg, #FFA500 0%, #FFD700 100%);
+        }
+
+        .mark-all-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid #FFD700;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #8B0000;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 13px;
+        }
+
+        .tab:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+            border-color: #DC143C;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
+            color: #FFD700;
+            border-color: #FFD700;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
+        }
+
+        .filter-info {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 228, 196, 0.95));
+            padding: 18px 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            border: 2px solid rgba(255, 215, 0, 0.4);
+            animation: fadeIn 0.8s ease-out 0.3s both;
+        }
+
+        .filter-info span {
+            color: #8B0000;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .count-badge {
+            background: linear-gradient(135deg, #DC143C, #8B0000);
+            color: #FFD700;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 800;
+            box-shadow: 0 3px 10px rgba(139, 0, 0, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .notifications-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeIn 0.8s ease-out 0.4s both;
+        }
+
+        .notification-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 250, 240, 0.98));
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            animation: cardSlideIn 0.6s ease-out backwards;
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .notification-card:nth-child(1) { animation-delay: 0.1s; }
+        .notification-card:nth-child(2) { animation-delay: 0.2s; }
+        .notification-card:nth-child(3) { animation-delay: 0.3s; }
+        .notification-card:nth-child(4) { animation-delay: 0.4s; }
+        .notification-card:nth-child(5) { animation-delay: 0.5s; }
+
+        .notification-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            background: transparent;
+            transition: all 0.3s;
+        }
+
+        .notification-card.unread {
+            background: linear-gradient(135deg, rgba(255, 245, 230, 0.98), rgba(255, 228, 196, 0.98));
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+
+        .notification-card.unread::before {
+            background: linear-gradient(to bottom, #DC143C, #FFD700);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .notification-card:hover {
+            transform: translateX(10px) translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(139, 0, 0, 0.25),
+                        0 0 30px rgba(255, 215, 0, 0.2);
+            border-color: #FFD700;
+        }
+
+        .notif-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFD700;
+            font-size: 24px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+            transition: all 0.4s ease;
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 6px 20px rgba(139, 0, 0, 0.5); }
+        }
+
+        .notification-card:hover .notif-icon {
+            transform: rotate(15deg) scale(1.15);
+        }
+
+        .notif-icon.reaction {
+            background: linear-gradient(135deg, #FF1493, #FF69B4);
+        }
+
+        .notif-icon.comment {
+            background: linear-gradient(135deg, #32CD32, #228B22);
+        }
+
+        .notif-icon.reply {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+        }
+
+        .notif-content {
+            flex: 1;
+        }
+
+        .notif-text {
+            color: #333;
+            line-height: 1.8;
+            margin-bottom: 12px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .notif-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 13px;
+            color: #8B0000;
+            font-weight: 600;
+        }
+
+        .notif-time {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .notif-time i {
+            color: #FFD700;
+        }
+
+        .notif-badge {
+            background: linear-gradient(135deg, #DC143C, #FF6347);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(220, 20, 60, 0.4);
+            animation: badgePulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #FF6347, #DC143C);
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            transition: all 0.4s ease;
+            box-shadow: 0 3px 10px rgba(220, 20, 60, 0.3);
+        }
+
+        .delete-btn:hover {
+            transform: scale(1.2) rotate(10deg);
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.5);
+        }
+
+        .delete-btn:active {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .loader {
+            text-align: center;
+            padding: 80px 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 215, 0, 0.3);
+            border-top: 4px solid #DC143C;
+            border-right: 4px solid #FFD700;
+            border-bottom: 4px solid #228B22;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spinMulticolor 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spinMulticolor {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader p {
+            color: #8B0000;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 100px 20px;
+            color: rgba(139, 0, 0, 0.7);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .empty-state i {
+            font-size: 100px;
+            margin-bottom: 25px;
+            color: rgba(255, 215, 0, 0.4);
+            animation: sway 3s ease-in-out infinite;
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        .empty-state h3 {
+            color: #8B0000;
+            margin-bottom: 15px;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .notification-card {
+                padding: 20px;
+            }
+
+            .notif-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .notification-card {
+                gap: 15px;
+            }
+
+            .notif-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <i class="fas fa-bell"></i>
+                Messages Spirituels
+            </h1>
+            <button class="mark-all-btn" onclick="markAllAsRead()" id="mark-all-btn">
+                <i class="fas fa-check-double"></i> Tout marquer
+            </button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="filterNotifications('all')">
+                <i class="fas fa-list"></i> Toutes
+            </button>
+            <button class="tab" onclick="filterNotifications('unread')">
+                <i class="fas fa-envelope"></i> Non Lues
+            </button>
+            <button class="tab" onclick="filterNotifications('read')">
+                <i class="fas fa-envelope-open"></i> Lues
+            </button>
+        </div>
+
+        <div class="filter-info" id="filter-info">
+            <span id="filter-text">Tous les messages spirituels</span>
+            <span class="count-badge" id="notif-count">0</span>
+        </div>
+
+        <div id="loader" class="loader">
+            <div class="spinner"></div>
+            <p>Chargement des messages sacrés...</p>
+        </div>
+
+        <div class="notifications-list" id="notifications-list"></div>
+
+        <div class="empty-state" id="empty-state" style="display: none;">
+            <i class="fas fa-bell-slash"></i>
+            <h3>Aucun Message</h3>
+            <p>Vous n'avez reçu aucun message spirituel pour le moment</p>
+        </div>
+    </div>
+
+    <script src="supabaseClient.js"></script>
+    <script>
+        const { supabase, getCurrentUser } = window.supabaseClient;
+        let currentUser = null;
+        let allNotifications = [];
+        let currentFilter = 'all';
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            currentUser = await getCurrentUser();
+            if (!currentUser) {
+                window.location.href = 'connexion.html';
+                return;
+            }
+
+            await loadNotifications();
+            setInterval(loadNotifications, 10000);
+        });
+
+        async function loadNotifications() {
+            try {
+                const { data: notifications, error } = await supabase
+                    .from('notifications')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('date_created', { ascending: false });
+
+                if (error) throw error;
+
+                allNotifications = notifications || [];
+                filterNotifications(currentFilter);
+
+                document.getElementById('loader').style.display = 'none';
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                document.getElementById('loader').innerHTML = '<p style="color: #DC143C;">Erreur de chargement des messages</p>';
+            }
+        }
+
+        function filterNotifications(filter) {
+            currentFilter = filter;
+
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            
+            const activeTab = Array.from(document.querySelectorAll('.tab')).find(tab => {
+                const text = tab.textContent.toLowerCase();
+                return (filter === 'all' && text.includes('toutes')) ||
+                       (filter === 'unread' && text.includes('non')) ||
+                       (filter === 'read' && text.includes('lues') && !text.includes('non'));
+            });
+            
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
+
+            let filtered = allNotifications;
+            let filterText = 'Tous les messages spirituels';
+
+            if (filter === 'unread') {
+                filtered = allNotifications.filter(n => !n.read_status);
+                filterText = 'Messages non lus';
+            } else if (filter === 'read') {
+                filtered = allNotifications.filter(n => n.read_status);
+                filterText = 'Messages lus';
+            }
+
+            document.getElementById('filter-text').textContent = filterText;
+            document.getElementById('notif-count').textContent = filtered.length;
+
+            displayNotifications(filtered);
+        }
+
+        function displayNotifications(notifications) {
+            const container = document.getElementById('notifications-list');
+            const emptyState = document.getElementById('empty-state');
+
+            if (notifications.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            container.innerHTML = '';
+
+            notifications.forEach(notif => {
+                const card = createNotificationCard(notif);
+                container.appendChild(card);
+            });
+
+            const unreadCount = allNotifications.filter(n => !n.read_status).length;
+            document.getElementById('mark-all-btn').style.display = unreadCount > 0 ? 'block' : 'none';
+        }
+
+        function createNotificationCard(notif) {
+            const card = document.createElement('div');
+            card.className = `notification-card ${!notif.read_status ? 'unread' : ''}`;
+
+            const iconClass = getNotificationIcon(notif.texte);
+            const iconType = getNotificationType(notif.texte);
+            const timeAgo = formatTimeAgo(notif.date_created);
+
+            card.innerHTML = `
+                <div class="notif-icon ${iconType}">
+                    <i class="${iconClass}"></i>
+                </div>
+                <div class="notif-content">
+                    <div class="notif-text">${escapeHtml(notif.texte)}</div>
+                    <div class="notif-meta">
+                        <div class="notif-time">
+                            <i class="far fa-clock"></i>
+                            <span>${timeAgo}</span>
+                        </div>
+                        ${!notif.read_status ? '<span class="notif-badge">Nouveau</span>' : ''}
+                    </div>
+                </div>
+                <button class="delete-btn" onclick="deleteNotification('${notif.notification_id}', event)">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            `;
+
+            if (!notif.read_status) {
+                card.addEventListener('click', (e) => {
+                    if (!e.target.closest('.delete-btn')) {
+                        markAsRead(notif.notification_id);
+                    }
+                });
+            }
+
+            return card;
+        }
+
+        function getNotificationIcon(text) {
+            const textLower = text.toLowerCase();
+            
+            if (textLower.includes('réaction')) {
+                return 'fas fa-heart';
+            } else if (textLower.includes('commentaire')) {
+                return 'fas fa-comment';
+            } else if (textLower.includes('réponse')) {
+                return 'fas fa-reply';
+            } else if (textLower.includes('article') || textLower.includes('publication')) {
+                return 'fas fa-newspaper';
+            } else if (textLower.includes('message')) {
+                return 'fas fa-envelope';
+            } else {
+                return 'fas fa-info-circle';
+            }
+        }
+
+        function getNotificationType(text) {
+            const textLower = text.toLowerCase();
+            
+            if (textLower.includes('réaction')) {
+                return 'reaction';
+            } else if (textLower.includes('commentaire')) {
+                return 'comment';
+            } else if (textLower.includes('réponse')) {
+                return 'reply';
+            }
+            return '';
+        }
+
+        function formatTimeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = now - date;
+            const seconds = Math.floor(diff / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            const months = Math.floor(days / 30);
+            const years = Math.floor(days / 365);
+
+            if (years > 0) {
+                return `Il y a ${years} an${years > 1 ? 's' : ''}`;
+            } else if (months > 0) {
+                return `Il y a ${months} mois`;
+            } else if (days > 0) {
+                return `Il y a ${days} jour${days > 1 ? 's' : ''}`;
+            } else if (hours > 0) {
+                return `Il y a ${hours} heure${hours > 1 ? 's' : ''}`;
+            } else if (minutes > 0) {
+                return `Il y a ${minutes} minute${minutes > 1 ? 's' : ''}`;
+            } else {
+                return 'À l\'instant';
+            }
+        }
+
+        async function markAsRead(notificationId) {
+            try {
+                await supabase
+                    .from('notifications')
+                    .update({ read_status: true })
+                    .eq('notification_id', notificationId);
+
+                await loadNotifications();
+
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        async function markAllAsRead() {
+            try {
+                await supabase
+                    .from('notifications')
+                    .update({ read_status: true })
+                    .eq('user_id', currentUser.id)
+                    .eq('read_status', false);
+
+                await loadNotifications();
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la mise à jour des messages');
+            }
+        }
+
+        async function deleteNotification(notificationId, event) {
+            event.stopPropagation();
+
+            if (!confirm('Voulez-vous vraiment supprimer ce message spirituel ?')) {
+                return;
+            }
+
+            try {
+                await supabase
+                    .from('notifications')
+                    .delete()
+                    .eq('notification_id', notificationId);
+
+                await loadNotifications();
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la suppression du message');
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

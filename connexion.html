@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secrets Spirituels des Aïeux - Connexion</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #FF6347 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(144, 238, 144, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 192, 203, 0.1) 0%, transparent 50%);
+            animation: backgroundShift 15s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 32px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            z-index: 1;
+            animation: containerEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 3px solid rgba(255, 215, 0, 0.3);
+        }
+
+        @keyframes containerEntrance {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .spiritual-header {
+            background: linear-gradient(135deg, #8B0000, #B22222);
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spiritual-header::before {
+            content: '✦';
+            position: absolute;
+            font-size: 80px;
+            color: rgba(255, 215, 0, 0.2);
+            top: -20px;
+            left: -10px;
+            animation: rotate 20s linear infinite;
+        }
+
+        .spiritual-header::after {
+            content: '✦';
+            position: absolute;
+            font-size: 60px;
+            color: rgba(255, 215, 0, 0.2);
+            bottom: -15px;
+            right: -5px;
+            animation: rotate 15s linear infinite reverse;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .spiritual-title {
+            color: #FFD700;
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .spiritual-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .tabs {
+            display: flex;
+            background: linear-gradient(to right, rgba(255, 215, 0, 0.1), rgba(144, 238, 144, 0.1), rgba(255, 192, 203, 0.1));
+            border-bottom: 2px solid rgba(139, 0, 0, 0.2);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #8B0000;
+            border-bottom: 4px solid transparent;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 15px;
+            position: relative;
+            background: white;
+        }
+
+        .tab::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #FFD700, #90EE90);
+            transform: translateX(-50%);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab.active {
+            color: #DC143C;
+            background: linear-gradient(to bottom, white, rgba(255, 215, 0, 0.05));
+            transform: translateY(-2px);
+        }
+
+        .tab.active::before {
+            width: 80%;
+        }
+
+        .tab:hover:not(.active) {
+            color: #B22222;
+            background: rgba(255, 215, 0, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .form-container {
+            padding: 48px 40px;
+            position: relative;
+        }
+
+        .form-content {
+            display: none;
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .form-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            color: #8B0000;
+            margin-bottom: 12px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 0 0 10px rgba(139, 0, 0, 0.3); }
+            50% { text-shadow: 0 0 20px rgba(220, 20, 60, 0.5); }
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #B22222;
+            margin-bottom: 32px;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 28px 0;
+            color: #B22222;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #FFD700, transparent);
+        }
+
+        .divider span {
+            padding: 0 16px;
+            color: #8B0000;
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+            animation: slideIn 0.5s ease-out backwards;
+        }
+
+        .input-group:nth-child(1) { animation-delay: 0.1s; }
+        .input-group:nth-child(2) { animation-delay: 0.2s; }
+        .input-group:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #8B0000;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 18px;
+            border: 2px solid rgba(139, 0, 0, 0.2);
+            border-radius: 16px;
+            font-size: 15px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(to bottom, white, rgba(255, 215, 0, 0.02));
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #DC143C;
+            box-shadow: 0 0 0 4px rgba(220, 20, 60, 0.15), 0 8px 16px rgba(139, 0, 0, 0.1);
+            transform: translateY(-2px);
+            background: white;
+        }
+
+        input::placeholder {
+            color: rgba(139, 0, 0, 0.4);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #8B0000 100%);
+            background-size: 200% 100%;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 20px rgba(139, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 1px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(220, 20, 60, 0.5);
+            background-position: 100% 0;
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background: linear-gradient(135deg, #999, #666);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .message {
+            padding: 16px 18px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            text-align: center;
+            display: none;
+            font-size: 14px;
+            font-weight: 600;
+            animation: messageSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, #FFF5F5, #FFE3E3);
+            color: #C00;
+            border: 2px solid #FF6B6B;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, #F0FDF4, #DCFCE7);
+            color: #15803D;
+            border: 2px solid #90EE90;
+        }
+
+        .message.info {
+            background: linear-gradient(135deg, #FFF9E6, #FFF4CC);
+            color: #B8860B;
+            border: 2px solid #FFD700;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .loader.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid rgba(139, 0, 0, 0.1);
+            border-top: 4px solid #DC143C;
+            border-right: 4px solid #FFD700;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spinGlow 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spinGlow {
+            0% { transform: rotate(0deg); filter: drop-shadow(0 0 5px rgba(220, 20, 60, 0.5)); }
+            50% { filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8)); }
+            100% { transform: rotate(360deg); filter: drop-shadow(0 0 5px rgba(220, 20, 60, 0.5)); }
+        }
+
+        .loader-text {
+            margin-top: 20px;
+            color: #8B0000;
+            font-size: 15px;
+            font-weight: 600;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .name-group {
+            display: flex;
+            gap: 16px;
+        }
+
+        .name-group .input-group {
+            flex: 1;
+        }
+
+        .info-text {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(144, 238, 144, 0.1));
+            padding: 18px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            color: #8B0000;
+            font-size: 14px;
+            line-height: 1.7;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .back-link a {
+            color: #DC143C;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .back-link a:hover {
+            color: #8B0000;
+            transform: translateX(-3px);
+            text-shadow: 2px 2px 4px rgba(255, 215, 0, 0.3);
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 32px 24px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .name-group {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .spiritual-title {
+                font-size: 22px;
+            }
+        }
+
+        .mystical-ornament {
+            text-align: center;
+            margin: 20px 0;
+            color: rgba(139, 0, 0, 0.3);
+            font-size: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="spiritual-header">
+            <div class="spiritual-title">✦ Secrets Spirituels des Aïeux ✦</div>
+            <div class="spiritual-subtitle">Héritage ancestral et sagesse millénaire</div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="connexion">Connexion</div>
+            <div class="tab" data-tab="inscription">Inscription</div>
+            <div class="tab" data-tab="reset">Récupération</div>
+        </div>
+
+        <div class="form-container">
+            <div id="message" class="message"></div>
+            
+            <div id="loader" class="loader">
+                <div class="spinner"></div>
+                <p class="loader-text">Connexion aux énergies ancestrales...</p>
+            </div>
+
+            <!-- Formulaire de Connexion -->
+            <div id="connexion-form" class="form-content active">
+                <h2>Bienvenue à nouveau</h2>
+                <p class="subtitle">Reconnectez-vous à votre héritage spirituel</p>
+                
+                <div class="mystical-ornament">❖ ❖ ❖</div>
+
+                <form id="login-form">
+                    <div class="input-group">
+                        <label for="login-email">✦ Adresse Email</label>
+                        <input type="email" id="login-email" required placeholder="votre@email.com">
+                    </div>
+                    <div class="input-group">
+                        <label for="login-password">✦ Mot de Passe Sacré</label>
+                        <input type="password" id="login-password" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn">Entrer dans le Sanctuaire</button>
+                </form>
+                <div class="back-link">
+                    <a href="#" onclick="switchTab('reset'); return false;">← Mot de passe oublié ?</a>
+                </div>
+            </div>
+
+            <!-- Formulaire d'Inscription -->
+            <div id="inscription-form" class="form-content">
+                <h2>Rejoignez notre cercle</h2>
+                <p class="subtitle">Accédez aux secrets de vos ancêtres</p>
+                
+                <div class="mystical-ornament">❖ ❖ ❖</div>
+
+                <form id="signup-form">
+                    <div class="name-group">
+                        <div class="input-group">
+                            <label for="signup-prenom">✦ Prénom</label>
+                            <input type="text" id="signup-prenom" required placeholder="Prénom">
+                        </div>
+                        <div class="input-group">
+                            <label for="signup-nom">✦ Nom</label>
+                            <input type="text" id="signup-nom" required placeholder="Nom">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="signup-email">✦ Adresse Email</label>
+                        <input type="email" id="signup-email" required placeholder="votre@email.com">
+                    </div>
+                    <div class="input-group">
+                        <label for="signup-password">✦ Mot de Passe Sacré</label>
+                        <input type="password" id="signup-password" required placeholder="••••••••" minlength="6">
+                    </div>
+                    <button type="submit" class="btn">Commencer votre Voyage Spirituel</button>
+                </form>
+            </div>
+
+            <!-- Formulaire Mot de passe oublié -->
+            <div id="reset-form" class="form-content">
+                <h2>Récupération sacrée</h2>
+                <p class="subtitle">Retrouvez l'accès à votre sanctuaire</p>
+                <div class="info-text">
+                    ✦ Entrez votre adresse email et nous vous enverrons un lien sacré pour restaurer votre accès aux enseignements ancestraux.
+                </div>
+                <form id="password-reset-form">
+                    <div class="input-group">
+                        <label for="reset-email">✦ Adresse Email</label>
+                        <input type="email" id="reset-email" required placeholder="votre@email.com">
+                    </div>
+                    <button type="submit" class="btn">Envoyer le Lien Sacré</button>
+                </form>
+                <div class="back-link">
+                    <a href="#" onclick="switchTab('connexion'); return false;">← Retour à la connexion</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="supabaseClient.js"></script>
+    <script>
+        let supabase, getCurrentUser, getUserProfile, redirectByRole, isLoggedIn;
+
+        function initializeApp() {
+            if (window.supabaseClient) {
+                ({ supabase, getCurrentUser, getUserProfile, redirectByRole, isLoggedIn } = window.supabaseClient);
+                // NE PAS appeler checkIfLoggedIn() ici - on laisse l'utilisateur sur la page
+                console.log('Client Supabase initialisé');
+            } else {
+                setTimeout(initializeApp, 100);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', initializeApp);
+
+        // Gestion des onglets avec animation
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                const tabName = this.getAttribute('data-tab');
+                switchTab(tabName);
+            });
+        });
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
+            
+            const selectedTab = document.querySelector(`[data-tab="${tab}"]`);
+            const selectedForm = document.getElementById(`${tab}-form`);
+            
+            if (selectedTab) selectedTab.classList.add('active');
+            if (selectedForm) selectedForm.classList.add('active');
+            
+            hideMessage();
+        }
+
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = `message ${type} show`;
+        }
+
+        function hideMessage() {
+            const msg = document.getElementById('message');
+            msg.classList.remove('show');
+        }
+
+        function toggleLoader(show) {
+            const loader = document.getElementById('loader');
+            const activeForm = document.querySelector('.form-content.active');
+            
+            if (show) {
+                loader.classList.add('show');
+                if (activeForm) activeForm.style.display = 'none';
+            } else {
+                loader.classList.remove('show');
+                if (activeForm) activeForm.style.display = 'block';
+            }
+        }
+
+        // Formulaire de connexion - AVEC redirection après succès
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessage();
+            toggleLoader(true);
+
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (error) throw error;
+
+                showMessage('✦ Connexion réussie ! Bienvenue dans le sanctuaire... ✦', 'success');
+                
+                // REDIRECTION UNIQUEMENT APRÈS UNE CONNEXION RÉUSSIE
+                setTimeout(async () => {
+                    try {
+                        await redirectByRole();
+                    } catch (redirectError) {
+                        console.error('Erreur de redirection:', redirectError);
+                        window.location.href = 'index.html';
+                    }
+                }, 1500);
+
+            } catch (error) {
+                toggleLoader(false);
+                showMessage(error.message || 'Erreur de connexion. Vérifiez vos identifiants.', 'error');
+            }
+        });
+
+        // Formulaire d'inscription - AVEC redirection après succès
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessage();
+            toggleLoader(true);
+
+            const prenom = document.getElementById('signup-prenom').value.trim();
+            const nom = document.getElementById('signup-nom').value.trim();
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+
+            try {
+                const { data: authData, error: authError } = await supabase.auth.signUp({
+                    email: email,
+                    password: password
+                });
+
+                if (authError) throw authError;
+
+                if (!authData.user) {
+                    throw new Error('Erreur lors de la création du compte');
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Gestion silencieuse de l'erreur de profil
+                try {
+                    const { error: profileError } = await supabase
+                        .from('users_profile')
+                        .insert({
+                            user_id: authData.user.id,
+                            prenom: prenom,
+                            nom: nom,
+                            role: 'user'
+                        });
+
+                    if (profileError) {
+                        console.log('Erreur profil (non-bloquante):', profileError);
+                    }
+                } catch (profileError) {
+                    console.log('Erreur lors de la création du profil (ignorée):', profileError);
+                }
+
+                showMessage('✦ Inscription réussie ! Vérifiez votre email pour confirmer votre compte. ✦', 'success');
+
+                // REDIRECTION UNIQUEMENT APRÈS UNE INSCRIPTION RÉUSSIE
+                setTimeout(async () => {
+                    try {
+                        await redirectByRole();
+                    } catch (redirectError) {
+                        console.error('Erreur de redirection:', redirectError);
+                        window.location.href = 'index.html';
+                    }
+                }, 2500);
+
+            } catch (error) {
+                toggleLoader(false);
+                console.error('Erreur inscription:', error);
+                showMessage(error.message || 'Erreur lors de l\'inscription', 'error');
+            }
+        });
+
+        // Formulaire de réinitialisation - SANS redirection
+        document.getElementById('password-reset-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessage();
+            toggleLoader(true);
+
+            const email = document.getElementById('reset-email').value;
+
+            try {
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: `${window.location.origin}/auth.html`
+                });
+
+                if (error) throw error;
+
+                showMessage('✦ Email de récupération envoyé ! Vérifiez votre boîte de réception. ✦', 'success');
+                
+                toggleLoader(false);
+                document.getElementById('password-reset-form').reset();
+
+            } catch (error) {
+                toggleLoader(false);
+                showMessage(error.message || 'Une erreur est survenue. Veuillez réessayer.', 'error');
+            }
+        });
+
+        // Animation de défilement fluide
+        document.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const container = document.querySelector('.container');
+            if (container) {
+                container.style.transform = `translateY(${scrolled * 0.1}px)`;
+            }
+        });
+    </script>
+</body>
+    </html>
