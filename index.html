@@ -29,12 +29,13 @@
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
             --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
             --shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
-            --navbar-height: 56px;
+            --navbar-height: 0px;
             --accent-blue: #2563eb;
             --accent-cyan: #06b6d4;
             --accent-purple: #7c3aed;
-            --accent-ash: #64748b;
-            --header-blue: #1e40af;
+            --accent-kaki: #6b7249;
+            --accent-kaki-dark: #545c3a;
+            --header-kaki: #8b9556;
             --accent-pink: #ff69b4;
         }
 
@@ -54,10 +55,13 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
-            padding-top: var(--navbar-height);
+            padding-top: 0;
             transition: all 0.3s ease;
             overflow-x: hidden;
             position: relative;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
         }
 
         #canvas-container {
@@ -164,18 +168,22 @@
         .navbar {
             position: fixed;
             top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--header-kaki) 0%, var(--accent-kaki) 100%);
+            box-shadow: 4px 0 30px rgba(107, 114, 73, 0.4);
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            z-index: 2000;
+            backdrop-filter: blur(20px);
+            transition: left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .navbar.show {
             left: 0;
-            right: 0;
-            height: var(--navbar-height);
-            background: linear-gradient(135deg, var(--header-blue) 0%, var(--accent-blue) 100%);
-            box-shadow: 0 4px 20px rgba(30, 64, 175, 0.3);
-            padding: 0 16px;
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            align-items: center;
-            gap: 16px;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
         }
 
         .navbar::before {
@@ -185,100 +193,123 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(0,0,0,0.1) 100%);
             pointer-events: none;
         }
 
-        .navbar-left {
-            color: white;
-            font-size: 18px;
-            font-weight: 700;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            letter-spacing: 0.5px;
-            position: relative;
-            z-index: 2;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-
-        .navbar-left::before {
-            content: '⚡';
-            font-size: 22px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
-        }
-
-        .navbar-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .theme-toggle {
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            width: 38px;
-            height: 38px;
+        .menu-toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--header-kaki), var(--accent-kaki));
+            border: none;
+            border-radius: 12px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            flex-shrink: 0;
-        }
-
-        .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: scale(1.1) rotate(180deg);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .theme-toggle i {
-            font-size: 16px;
-            color: white;
-        }
-
-        .navbar-right {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 3px;
+            gap: 6px;
+            z-index: 2001;
+            box-shadow: 0 4px 20px rgba(107, 114, 73, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(107, 114, 73, 0.6);
+        }
+
+        .menu-toggle-btn span {
+            width: 24px;
+            height: 3px;
+            background: white;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .menu-toggle-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+
+        .navbar-header {
+            padding: 30px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        .navbar-left {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        .navbar-left::before {
+            content: '⚡';
+            font-size: 36px;
+            animation: pulse 2s infinite;
+        }
+
+        .navbar-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px 0;
+        }
+
+        .navbar-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .navbar-content::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .navbar-content::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+        }
+
+        .navbar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
             cursor: pointer;
             color: rgba(255, 255, 255, 0.85);
             transition: all 0.3s ease;
             text-decoration: none;
+            padding: 16px 20px;
+            margin: 5px 15px;
+            border-radius: 12px;
             position: relative;
-            padding: 6px 10px;
-            border-radius: 10px;
-            min-width: 52px;
-            backdrop-filter: blur(10px);
-            height: 48px;
-            flex-shrink: 0;
         }
 
         .nav-item:hover {
             background: rgba(255, 255, 255, 0.15);
             color: white;
-            transform: translateY(-2px);
+            transform: translateX(5px);
         }
 
         .nav-item.active {
@@ -287,39 +318,78 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 70%;
+            background: white;
+            border-radius: 0 2px 2px 0;
+        }
+
         .nav-item i {
-            font-size: 18px;
+            font-size: 22px;
+            width: 30px;
+            text-align: center;
         }
 
         .nav-item span {
-            font-size: 9px;
+            font-size: 16px;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        }
+
+        .theme-toggle {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.02);
+        }
+
+        .theme-toggle i {
+            font-size: 18px;
         }
 
         .search-toggle-btn {
             position: fixed;
-            top: var(--navbar-height);
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--accent-ash), var(--accent-blue));
+            background: linear-gradient(135deg, var(--accent-kaki), var(--header-kaki));
             border: none;
-            border-radius: 0 0 16px 16px;
+            border-radius: 16px;
             width: 70px;
             height: 36px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(100, 116, 139, 0.4);
+            box-shadow: 0 4px 20px rgba(107, 114, 73, 0.4);
             z-index: 999;
             transition: all 0.3s ease;
         }
 
         .search-toggle-btn:hover {
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-            transform: translateX(-50%) translateY(3px);
+            background: linear-gradient(135deg, var(--header-kaki), var(--accent-kaki-dark));
+            transform: translateX(-50%) translateY(-3px);
+            box-shadow: 0 6px 30px rgba(107, 114, 73, 0.6);
         }
 
         .search-toggle-btn i {
@@ -339,8 +409,8 @@
             right: 0;
             height: 320px;
             background: var(--bg-secondary);
-            border-top: 3px solid var(--accent-blue);
-            box-shadow: 0 -4px 30px rgba(37, 99, 235, 0.2);
+            border-top: 3px solid var(--accent-kaki);
+            box-shadow: 0 -4px 30px rgba(107, 114, 73, 0.3);
             z-index: 998;
             transition: bottom 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             padding: 32px 24px;
@@ -354,17 +424,8 @@
             bottom: 0;
         }
 
-        .search-panel h3 {
-            color: var(--text-primary);
-            font-size: 20px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
         .search-panel h3 i {
-            color: var(--accent-blue);
+            color: var(--accent-kaki);
             font-size: 24px;
         }
 
@@ -388,14 +449,14 @@
 
         .search-input:focus {
             outline: none;
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            border-color: var(--accent-kaki);
+            box-shadow: 0 0 0 4px rgba(107, 114, 73, 0.1);
             background: var(--bg-secondary);
         }
 
         .search-btn, .view-more-btn {
             padding: 16px 32px;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            background: linear-gradient(135deg, var(--accent-kaki), var(--header-kaki));
             border: none;
             border-radius: 14px;
             color: white;
@@ -403,7 +464,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 4px 15px rgba(107, 114, 73, 0.3);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -412,7 +473,7 @@
 
         .search-btn:hover, .view-more-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(37, 99, 235, 0.5);
+            box-shadow: 0 6px 25px rgba(107, 114, 73, 0.5);
         }
 
         .view-more-btn {
@@ -433,7 +494,7 @@
 
         .page-title {
             position: fixed;
-            top: calc(var(--navbar-height) + 8px);
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             background: var(--bg-secondary);
@@ -545,10 +606,12 @@
         }
 
         .spa-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 24px;
-            margin-top: 40px;
+            max-width: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow-y: auto;
             position: relative;
             z-index: 1;
         }
@@ -556,6 +619,12 @@
         .spa-page {
             display: none;
             animation: fadeInSlide 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 100%;
+            height: 100%;
+            padding: 80px 20px 100px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-sizing: border-box;
         }
 
         .spa-page.active {
@@ -1023,10 +1092,16 @@
 
         .page-iframe {
             width: 100%;
-            height: calc(100vh - var(--navbar-height) - 40px);
+            height: 100vh;
             border: none;
             background: var(--bg-secondary);
-            border-radius: 12px;
+            border-radius: 0;
+        }
+
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
         }
 
         .iframe-loader {
@@ -1035,133 +1110,61 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            z-index: 10;
         }
 
-        .iframe-container {
-            position: relative;
-            width: 100%;
-            height: calc(100vh - var(--navbar-height) - 40px);
+        .menu-item i {
+            width: 30px;
+            font-size: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 10px 15px;
+        }
+
+        .menu-item.logout {
+            color: #ffcccc;
+        }
+
+        .menu-item.logout:hover {
+            background: rgba(255, 100, 100, 0.2);
+        }
+
+        .menu-item.logout i {
+            color: #ffcccc;
         }
 
         @media (max-width: 768px) {
-            :root {
-                --navbar-height: 52px;
-            }
-
             .navbar {
-                padding: 0 10px;
-                gap: 10px;
+                width: 260px;
+                left: -260px;
             }
 
-            .navbar-left {
-                font-size: 16px;
+            .menu-toggle-btn {
+                width: 45px;
+                height: 45px;
+                top: 15px;
+                left: 15px;
             }
 
-            .navbar-left::before {
-                font-size: 20px;
-            }
-
-            .theme-toggle {
-                width: 36px;
-                height: 36px;
-            }
-
-            .theme-toggle i {
-                font-size: 15px;
-            }
-
-            .nav-item {
-                min-width: 48px;
-                padding: 5px 8px;
-                height: 44px;
-            }
-
-            .nav-item i {
-                font-size: 16px;
-            }
-
-            .nav-item span {
-                font-size: 8px;
-            }
-
-            .spa-container {
-                padding: 16px;
-                margin-top: 24px;
-            }
-
-            .search-panel {
-                height: 280px;
-                bottom: -280px;
-                padding: 24px 16px;
-            }
-
-            .search-toggle-btn {
-                width: 60px;
-                height: 32px;
-            }
-
-            .search-toggle-btn i {
-                font-size: 16px;
-            }
-
-            .page-title {
-                font-size: 14px;
-                padding: 8px 20px;
-            }
-
-            .welcome-popup {
-                padding: 30px 40px;
-            }
-
-            .welcome-popup-emoji {
-                font-size: 60px;
-            }
-
-            .welcome-popup-title {
-                font-size: 24px;
-            }
-
-            .welcome-popup-name {
-                font-size: 30px;
+            .spa-page {
+                padding: 70px 15px 90px 15px;
             }
         }
 
         @media (max-width: 380px) {
             .navbar {
-                padding: 0 6px;
-                gap: 6px;
+                width: 240px;
+                left: -240px;
             }
 
-            .navbar-left {
-                font-size: 14px;
-            }
-
-            .navbar-left::before {
-                font-size: 18px;
-            }
-
-            .theme-toggle {
-                width: 34px;
-                height: 34px;
-            }
-
-            .nav-item {
-                min-width: 44px;
-                padding: 4px 6px;
+            .menu-toggle-btn {
+                width: 42px;
                 height: 42px;
-            }
-
-            .nav-item i {
-                font-size: 15px;
-            }
-
-            .nav-item span {
-                font-size: 7px;
-            }
-
-            .badge {
-                font-size: 8px;
-                padding: 2px 5px;
             }
         }
     </style>
@@ -1177,14 +1180,20 @@
         <div class="welcome-popup-subtitle">Connect Ultra</div>
     </div>
 
-    <nav class="navbar">
-        <div class="navbar-left">Connect Ultra</div>
-        <div class="navbar-center">
-            <button class="theme-toggle" id="theme-toggle">
-                <i class="fas fa-moon" id="theme-icon"></i>
-            </button>
+    <button class="menu-toggle-btn" id="menu-toggle-btn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <nav class="navbar" id="navbar">
+        <div class="navbar-header">
+            <div class="navbar-left">
+                Connect Ultra
+            </div>
         </div>
-        <div class="navbar-right">
+
+        <div class="navbar-content">
             <div class="nav-item active" data-page="home" data-title="Accueil">
                 <i class="fas fa-home"></i>
                 <span>Accueil</span>
@@ -1196,36 +1205,42 @@
             </div>
             <div class="nav-item" data-page="notifications" data-title="Notifications">
                 <i class="fas fa-bell"></i>
-                <span>Notifs</span>
+                <span>Notifications</span>
                 <span class="badge" id="notif-badge" style="display: none;">0</span>
             </div>
-            <div class="nav-item menu-dropdown">
-                <i class="fas fa-bars"></i>
-                <span>Menu</span>
-                <div class="menu-content" id="menu-dropdown">
-                    <div class="menu-item" id="login-item" onclick="window.location.href='connexion.html'">
-                        <i class="fas fa-sign-in-alt"></i>
-                        <span>Connexion</span>
-                    </div>
-                    <div class="menu-item" id="profile-item" style="display: none;">
-                        <i class="fas fa-user"></i>
-                        <span id="user-name">Mon Profil</span>
-                    </div>
-                    <div class="menu-item" id="admin-item" style="display: none;" onclick="window.location.href='publier.html'">
-                        <i class="fas fa-edit"></i>
-                        <span>Administration</span>
-                    </div>
-                    <div class="menu-item" id="settings-item" onclick="window.location.href='parametre.html'">
-                        <i class="fas fa-cog"></i>
-                        <span>Paramètres</span>
-                    </div>
-                    <div class="menu-divider"></div>
-                    <div class="menu-item logout" id="logout-item" style="display: none;">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Déconnexion</span>
-                    </div>
-                </div>
+
+            <div class="menu-divider"></div>
+
+            <div class="menu-item" id="login-item" onclick="window.location.href='connexion.html'">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Connexion</span>
             </div>
+            <div class="menu-item" id="profile-item" style="display: none;">
+                <i class="fas fa-user"></i>
+                <span id="user-name">Mon Profil</span>
+            </div>
+            <div class="menu-item" id="admin-item" style="display: none;" onclick="window.location.href='publier.html'">
+                <i class="fas fa-edit"></i>
+                <span>Administration</span>
+            </div>
+            <div class="menu-item" id="settings-item" onclick="window.location.href='parametre.html'">
+                <i class="fas fa-cog"></i>
+                <span>Paramètres</span>
+            </div>
+
+            <div class="menu-divider"></div>
+
+            <div class="menu-item logout" id="logout-item" style="display: none;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Déconnexion</span>
+            </div>
+        </div>
+
+        <div class="navbar-footer">
+            <button class="theme-toggle" id="theme-toggle">
+                <i class="fas fa-moon" id="theme-icon"></i>
+                <span>Mode Sombre</span>
+            </button>
         </div>
     </nav>
 
@@ -1464,6 +1479,9 @@
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
         const body = document.body;
+        const menuToggleBtn = document.getElementById('menu-toggle-btn');
+        const navbar = document.getElementById('navbar');
+        let menuTimeout;
 
         const savedTheme = localStorage.getItem('theme') || 'light';
         if (savedTheme === 'dark') {
@@ -1479,6 +1497,41 @@
             } else {
                 themeIcon.classList.replace('fa-sun', 'fa-moon');
                 localStorage.setItem('theme', 'light');
+            }
+        });
+
+        menuToggleBtn.addEventListener('click', () => {
+            navbar.classList.toggle('show');
+            menuToggleBtn.classList.toggle('active');
+            clearTimeout(menuTimeout);
+            if (navbar.classList.contains('show')) {
+                startMenuTimeout();
+            }
+        });
+
+        function startMenuTimeout() {
+            clearTimeout(menuTimeout);
+            menuTimeout = setTimeout(() => {
+                navbar.classList.remove('show');
+                menuToggleBtn.classList.remove('active');
+            }, 5000);
+        }
+
+        navbar.addEventListener('mouseenter', () => {
+            clearTimeout(menuTimeout);
+        });
+
+        navbar.addEventListener('mouseleave', () => {
+            if (navbar.classList.contains('show')) {
+                startMenuTimeout();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!navbar.contains(e.target) && !menuToggleBtn.contains(e.target)) {
+                navbar.classList.remove('show');
+                menuToggleBtn.classList.remove('active');
+                clearTimeout(menuTimeout);
             }
         });
 
@@ -1650,28 +1703,19 @@
         }
 
         function initNavigation() {
-            const menuDropdown = document.querySelector('.menu-dropdown');
-            const menuContent = document.getElementById('menu-dropdown');
-
             document.querySelectorAll('.nav-item[data-page]').forEach(item => {
                 item.addEventListener('click', function(e) {
                     e.preventDefault();
                     const page = this.getAttribute('data-page');
                     const title = this.getAttribute('data-title');
                     navigateToPage(page, title);
+                    navbar.classList.remove('show');
+                    menuToggleBtn.classList.remove('active');
+                    clearTimeout(menuTimeout);
                 });
             });
 
-            menuDropdown.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                menuContent.classList.toggle('show');
-            });
-
             document.addEventListener('click', function(e) {
-                if (!e.target.closest('.menu-dropdown')) {
-                    menuContent.classList.remove('show');
-                }
                 if (!e.target.closest('.share-menu') && !e.target.closest('.share-btn')) {
                     document.querySelectorAll('.share-menu.show').forEach(m => m.classList.remove('show'));
                 }
@@ -2208,4 +2252,4 @@
         }, 30000);
     </script>
 </body>
-    </html>
+                                   </html>
