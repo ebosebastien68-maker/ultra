@@ -243,9 +243,36 @@
         }
 
         .navbar-header {
-            padding: 30px 20px;
+            padding: 30px 20px 20px 20px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
             text-align: center;
+            position: relative;
+        }
+
+        .theme-toggle-mini {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle-mini:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1) rotate(180deg);
+        }
+
+        .theme-toggle-mini i {
+            font-size: 18px;
+            color: white;
         }
 
         .navbar-left {
@@ -271,7 +298,7 @@
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 20px 0;
+            padding: 10px 0;
         }
 
         .navbar-content::-webkit-scrollbar {
@@ -288,7 +315,7 @@
         }
 
         .navbar-footer {
-            padding: 20px;
+            padding: 15px 20px;
             border-top: 1px solid rgba(255,255,255,0.1);
         }
 
@@ -300,8 +327,8 @@
             color: rgba(255, 255, 255, 0.85);
             transition: all 0.3s ease;
             text-decoration: none;
-            padding: 16px 20px;
-            margin: 5px 15px;
+            padding: 14px 20px;
+            margin: 4px 15px;
             border-radius: 12px;
             position: relative;
         }
@@ -346,7 +373,7 @@
             background: rgba(255, 255, 255, 0.15);
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 12px;
-            padding: 14px;
+            padding: 12px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -354,7 +381,7 @@
             gap: 10px;
             transition: all 0.3s ease;
             color: white;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
         }
 
@@ -364,21 +391,21 @@
         }
 
         .theme-toggle i {
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .search-toggle-btn {
             position: fixed;
             bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 20px;
             background: linear-gradient(135deg, var(--accent-kaki), var(--header-kaki));
             border: none;
-            border-radius: 16px;
-            width: 70px;
-            height: 36px;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
             cursor: pointer;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 20px rgba(107, 114, 73, 0.4);
@@ -388,18 +415,25 @@
 
         .search-toggle-btn:hover {
             background: linear-gradient(135deg, var(--header-kaki), var(--accent-kaki-dark));
-            transform: translateX(-50%) translateY(-3px);
+            transform: scale(1.1);
             box-shadow: 0 6px 30px rgba(107, 114, 73, 0.6);
         }
 
         .search-toggle-btn i {
-            font-size: 18px;
+            font-size: 22px;
             color: white;
             transition: transform 0.3s ease;
         }
 
+        .search-toggle-btn span {
+            font-size: 9px;
+            color: white;
+            margin-top: 2px;
+            font-weight: 600;
+        }
+
         .search-toggle-btn.active i {
-            transform: rotate(180deg);
+            transform: rotate(45deg);
         }
 
         .search-panel {
@@ -477,9 +511,119 @@
         }
 
         .view-more-btn {
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-kaki));
             justify-content: center;
             width: 100%;
+        }
+
+        .view-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(107, 114, 73, 0.5);
+        }
+
+        .notification-popup {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--accent-kaki), var(--header-kaki));
+            color: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 30px rgba(107, 114, 73, 0.5);
+            z-index: 2500;
+            display: none;
+            min-width: 300px;
+            max-width: 400px;
+            animation: slideInRight 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification-popup:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 40px rgba(107, 114, 73, 0.7);
+        }
+
+        .notification-popup.show {
+            display: block;
+        }
+
+        .notification-popup.hide {
+            animation: slideOutRight 0.4s ease;
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .notification-popup-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .notification-popup-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .notification-popup-title {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .notification-popup-message {
+            font-size: 14px;
+            opacity: 0.95;
+            line-height: 1.4;
+        }
+
+        .notification-popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .notification-popup-close:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
         }
 
         .search-results-info {
@@ -1096,10 +1240,19 @@
             border: none;
             background: var(--bg-secondary);
             border-radius: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
         }
 
         .iframe-container {
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             width: 100%;
             height: 100vh;
         }
@@ -1180,6 +1333,17 @@
         <div class="welcome-popup-subtitle">Connect Ultra</div>
     </div>
 
+    <div class="notification-popup" id="notification-popup">
+        <button class="notification-popup-close" onclick="closeNotificationPopup()">×</button>
+        <div class="notification-popup-header">
+            <div class="notification-popup-icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="notification-popup-title" id="popup-title">Nouvelle notification</div>
+        </div>
+        <div class="notification-popup-message" id="popup-message"></div>
+    </div>
+
     <button class="menu-toggle-btn" id="menu-toggle-btn">
         <span></span>
         <span></span>
@@ -1188,6 +1352,9 @@
 
     <nav class="navbar" id="navbar">
         <div class="navbar-header">
+            <button class="theme-toggle-mini" id="theme-toggle-mini">
+                <i class="fas fa-moon" id="theme-icon-mini"></i>
+            </button>
             <div class="navbar-left">
                 Connect Ultra
             </div>
@@ -1207,6 +1374,10 @@
                 <i class="fas fa-bell"></i>
                 <span>Notifications</span>
                 <span class="badge" id="notif-badge" style="display: none;">0</span>
+            </div>
+            <div class="nav-item" data-page="plus" data-title="Connect Ultra">
+                <i class="fas fa-plus-circle"></i>
+                <span>Connect Ultra</span>
             </div>
 
             <div class="menu-divider"></div>
@@ -1239,13 +1410,14 @@
         <div class="navbar-footer">
             <button class="theme-toggle" id="theme-toggle">
                 <i class="fas fa-moon" id="theme-icon"></i>
-                <span>Mode Sombre</span>
+                <span id="theme-text">Mode Sombre</span>
             </button>
         </div>
     </nav>
 
     <button class="search-toggle-btn" id="search-toggle-btn">
-        <i class="fas fa-chevron-down"></i>
+        <i class="fas fa-search"></i>
+        <span>Recherche</span>
     </button>
 
     <div class="search-panel" id="search-panel">
@@ -1260,10 +1432,6 @@
                 Rechercher
             </button>
         </div>
-        <button class="view-more-btn" id="view-more-btn" onclick="window.location.href='plus.html'">
-            <i class="fas fa-plus-circle"></i>
-            Voir Plus
-        </button>
         <div class="search-results-info" id="search-results-info" style="display: none;">
             Résultats: <span id="search-results-count">0</span> article(s) trouvé(s)
         </div>
@@ -1294,6 +1462,14 @@
         </div>
 
         <div id="notifications-page" class="spa-page">
+            <div class="iframe-container">
+                <div class="iframe-loader">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="plus-page" class="spa-page">
             <div class="iframe-container">
                 <div class="iframe-loader">
                     <div class="spinner"></div>
@@ -1478,6 +1654,9 @@
 
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
+        const themeToggleMini = document.getElementById('theme-toggle-mini');
+        const themeIconMini = document.getElementById('theme-icon-mini');
+        const themeText = document.getElementById('theme-text');
         const body = document.body;
         const menuToggleBtn = document.getElementById('menu-toggle-btn');
         const navbar = document.getElementById('navbar');
@@ -1487,18 +1666,27 @@
         if (savedTheme === 'dark') {
             body.classList.add('dark-mode');
             themeIcon.classList.replace('fa-moon', 'fa-sun');
+            themeIconMini.classList.replace('fa-moon', 'fa-sun');
+            themeText.textContent = 'Mode Clair';
         }
 
-        themeToggle.addEventListener('click', () => {
+        function toggleTheme() {
             body.classList.toggle('dark-mode');
             if (body.classList.contains('dark-mode')) {
                 themeIcon.classList.replace('fa-moon', 'fa-sun');
+                themeIconMini.classList.replace('fa-moon', 'fa-sun');
+                themeText.textContent = 'Mode Clair';
                 localStorage.setItem('theme', 'dark');
             } else {
                 themeIcon.classList.replace('fa-sun', 'fa-moon');
+                themeIconMini.classList.replace('fa-sun', 'fa-moon');
+                themeText.textContent = 'Mode Sombre';
                 localStorage.setItem('theme', 'light');
             }
-        });
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+        themeToggleMini.addEventListener('click', toggleTheme);
 
         menuToggleBtn.addEventListener('click', () => {
             navbar.classList.toggle('show');
@@ -1534,6 +1722,36 @@
                 clearTimeout(menuTimeout);
             }
         });
+
+        function showNotificationPopup(title, message, icon = 'fa-bell') {
+            const popup = document.getElementById('notification-popup');
+            const popupTitle = document.getElementById('popup-title');
+            const popupMessage = document.getElementById('popup-message');
+            const popupIcon = popup.querySelector('.notification-popup-icon i');
+            
+            popupTitle.textContent = title;
+            popupMessage.textContent = message;
+            popupIcon.className = `fas ${icon}`;
+            
+            popup.classList.remove('hide');
+            popup.classList.add('show');
+            
+            setTimeout(() => {
+                closeNotificationPopup();
+            }, 5000);
+        }
+
+        function closeNotificationPopup() {
+            const popup = document.getElementById('notification-popup');
+            popup.classList.add('hide');
+            setTimeout(() => {
+                popup.classList.remove('show', 'hide');
+            }, 400);
+        }
+
+        window.closeNotificationPopup = closeNotificationPopup;
+
+        document.getElementById('notification-popup').addEventListener('click', closeNotificationPopup);
 
         const searchToggleBtn = document.getElementById('search-toggle-btn');
         const searchPanel = document.getElementById('search-panel');
@@ -2204,6 +2422,7 @@
                 if (count > 0) {
                     badge.textContent = count;
                     badge.style.display = 'block';
+                    showNotificationPopup('Nouvelles notifications', `Vous avez ${count} nouvelle(s) notification(s)`, 'fa-bell');
                 } else {
                     badge.style.display = 'none';
                 }
@@ -2223,6 +2442,7 @@
                 if (count > 0) {
                     badge.textContent = count;
                     badge.style.display = 'block';
+                    showNotificationPopup('Nouveaux messages', `Vous avez ${count} nouveau(x) message(s)`, 'fa-envelope');
                 } else {
                     badge.style.display = 'none';
                 }
@@ -2252,4 +2472,4 @@
         }, 30000);
     </script>
 </body>
-                                   </html>
+    </html>
