@@ -29,12 +29,13 @@
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
             --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
             --shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
-            --navbar-height: 60px;
+            --navbar-height: 56px;
             --accent-blue: #2563eb;
             --accent-cyan: #06b6d4;
             --accent-purple: #7c3aed;
             --accent-ash: #64748b;
             --header-blue: #1e40af;
+            --accent-pink: #ff69b4;
         }
 
         body.dark-mode {
@@ -198,7 +199,7 @@
             z-index: 2;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             white-space: nowrap;
         }
 
@@ -225,8 +226,8 @@
             background: rgba(255, 255, 255, 0.15);
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -243,13 +244,13 @@
         }
 
         .theme-toggle i {
-            font-size: 18px;
+            font-size: 16px;
             color: white;
         }
 
         .navbar-right {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
             position: relative;
             z-index: 2;
@@ -270,6 +271,7 @@
             border-radius: 10px;
             min-width: 52px;
             backdrop-filter: blur(10px);
+            height: 48px;
             flex-shrink: 0;
         }
 
@@ -677,6 +679,31 @@
             box-shadow: var(--shadow-sm);
         }
 
+        .article-links {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .link-btn {
+            flex: 1;
+            padding: 8px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+        }
+
+        .link-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.6);
+        }
+
         .reactions {
             display: flex;
             gap: 12px;
@@ -741,24 +768,224 @@
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(6, 182, 212, 0.05));
         }
 
-        .share-btn, .user-reactions-btn {
-            width: 64px;
+        .comment-count-badge {
+            background: var(--accent-blue);
+            color: white;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .share-btn {
+            width: 60px;
             padding: 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             position: relative;
+            border-right: 1px solid var(--border-color);
         }
 
-        .share-btn:hover, .user-reactions-btn:hover {
+        .share-btn:hover {
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(6, 182, 212, 0.05));
         }
 
-        .share-btn i, .user-reactions-btn i {
+        .share-btn i {
             font-size: 20px;
             color: var(--accent-blue);
+        }
+
+        .share-menu {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            padding: 15px;
+            margin-bottom: 10px;
+            min-width: 280px;
+            z-index: 100;
+            animation: shareMenuSlide 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        @keyframes shareMenuSlide {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .share-menu.show {
+            display: block;
+        }
+
+        .share-menu h4 {
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .share-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .share-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .share-option:hover {
+            background: var(--bg-primary);
+            transform: translateY(-2px);
+        }
+
+        .share-option i {
+            font-size: 24px;
+            margin-bottom: 3px;
+        }
+
+        .share-option span {
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .share-option.facebook i { color: #1877f2; }
+        .share-option.twitter i { color: #1da1f2; }
+        .share-option.whatsapp i { color: #25d366; }
+        .share-option.telegram i { color: #0088cc; }
+        .share-option.instagram i { 
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .share-option.tiktok i { color: #000000; }
+        body.dark-mode .share-option.tiktok i { color: #ffffff; }
+        .share-option.more i { color: var(--accent-blue); }
+
+        .user-reactions-btn {
+            width: 60px;
+            padding: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .user-reactions-btn:hover {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(6, 182, 212, 0.05));
+        }
+
+        .user-reactions-btn i {
+            font-size: 20px;
+            color: var(--accent-blue);
+        }
+
+        .comments-section {
+            display: none;
+            padding: 0 15px 15px;
+        }
+
+        .comments-section.show {
+            display: block;
+        }
+
+        .admin-options {
+            position: relative;
+            margin-left: auto;
+        }
+
+        .options-btn {
+            background: var(--accent-purple);
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(124, 58, 237, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .options-btn:hover {
+            transform: scale(1.1);
+            background: var(--accent-blue);
+        }
+
+        .options-menu {
+            display: none;
+            position: absolute;
+            top: 35px;
+            right: 0;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            min-width: 150px;
+            z-index: 10;
+            overflow: hidden;
+            animation: slideDown 0.2s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .options-menu.show {
+            display: block;
+        }
+
+        .options-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .options-menu a:hover {
+            background: linear-gradient(90deg, rgba(37, 99, 235, 0.1), transparent);
+        }
+
+        .options-menu a.delete {
+             color: #ef4444;
+        }
+
+        .options-menu a.delete:hover {
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.1), transparent);
+        }
+
+        .options-menu a i {
+            width: 16px;
+            text-align: center;
         }
 
         .loader {
@@ -794,14 +1021,36 @@
             color: var(--accent-blue);
         }
 
+        .page-iframe {
+            width: 100%;
+            height: calc(100vh - var(--navbar-height) - 40px);
+            border: none;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+        }
+
+        .iframe-loader {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - var(--navbar-height) - 40px);
+        }
+
         @media (max-width: 768px) {
             :root {
-                --navbar-height: 56px;
+                --navbar-height: 52px;
             }
 
             .navbar {
-                padding: 0 12px;
-                gap: 12px;
+                padding: 0 10px;
+                gap: 10px;
             }
 
             .navbar-left {
@@ -818,12 +1067,13 @@
             }
 
             .theme-toggle i {
-                font-size: 16px;
+                font-size: 15px;
             }
 
             .nav-item {
                 min-width: 48px;
                 padding: 5px 8px;
+                height: 44px;
             }
 
             .nav-item i {
@@ -845,19 +1095,41 @@
                 padding: 24px 16px;
             }
 
-            .share-options {
-                grid-template-columns: repeat(3, 1fr);
+            .search-toggle-btn {
+                width: 60px;
+                height: 32px;
+            }
+
+            .search-toggle-btn i {
+                font-size: 16px;
+            }
+
+            .page-title {
+                font-size: 14px;
+                padding: 8px 20px;
+            }
+
+            .welcome-popup {
+                padding: 30px 40px;
+            }
+
+            .welcome-popup-emoji {
+                font-size: 60px;
+            }
+
+            .welcome-popup-title {
+                font-size: 24px;
+            }
+
+            .welcome-popup-name {
+                font-size: 30px;
             }
         }
 
         @media (max-width: 380px) {
-            :root {
-                --navbar-height: 54px;
-            }
-
             .navbar {
-                padding: 0 8px;
-                gap: 8px;
+                padding: 0 6px;
+                gap: 6px;
             }
 
             .navbar-left {
@@ -868,9 +1140,15 @@
                 font-size: 18px;
             }
 
+            .theme-toggle {
+                width: 34px;
+                height: 34px;
+            }
+
             .nav-item {
                 min-width: 44px;
                 padding: 4px 6px;
+                height: 42px;
             }
 
             .nav-item i {
@@ -879,6 +1157,11 @@
 
             .nav-item span {
                 font-size: 7px;
+            }
+
+            .badge {
+                font-size: 8px;
+                padding: 2px 5px;
             }
         }
     </style>
@@ -1023,7 +1306,6 @@
             renderer.setClearColor(0x000000, 0);
             container.appendChild(renderer.domElement);
 
-            // Créer des particules
             const geometry = new THREE.BufferGeometry();
             const particleCount = 800;
             const positions = new Float32Array(particleCount * 3);
@@ -1083,7 +1365,6 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
 
-        // Initialize Three.js
         initThreeJS();
 
         // Service Worker & Push Notifications
@@ -1091,7 +1372,7 @@
             window.addEventListener('load', async () => {
                 try {
                     const registration = await navigator.serviceWorker.register('./service-worker.js');
-                    console.log('✅ Service Worker enregistré:', registration);
+                    console.log('✅ Service Worker enregistré');
                     
                     await navigator.serviceWorker.ready;
                     
@@ -1099,7 +1380,6 @@
                         const permission = await Notification.requestPermission();
                         
                         if (permission === 'granted') {
-                            console.log('✅ Permission de notification accordée');
                             await subscribeToPushNotifications(registration);
                         }
                     }
@@ -1119,7 +1399,7 @@
                     applicationServerKey: convertedVapidKey
                 });
                 
-                console.log('✅ Abonnement push créé:', subscription);
+                console.log('✅ Abonnement push créé');
                 await saveSubscriptionToDatabase(subscription);
                 
             } catch (error) {
@@ -1129,13 +1409,9 @@
 
         function urlBase64ToUint8Array(base64String) {
             const padding = '='.repeat((4 - base64String.length % 4) % 4);
-            const base64 = (base64String + padding)
-                .replace(/\-/g, '+')
-                .replace(/_/g, '/');
-            
+            const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
             const rawData = window.atob(base64);
             const outputArray = new Uint8Array(rawData.length);
-            
             for (let i = 0; i < rawData.length; ++i) {
                 outputArray[i] = rawData.charCodeAt(i);
             }
@@ -1147,10 +1423,7 @@
                 const { supabase, getCurrentUser } = window.supabaseClient;
                 const currentUser = await getCurrentUser();
                 
-                if (!currentUser) {
-                    console.log('⚠️ Utilisateur non connecté');
-                    return;
-                }
+                if (!currentUser) return;
                 
                 const subscriptionData = {
                     user_id: currentUser.id,
@@ -1161,17 +1434,10 @@
                     created_at: new Date().toISOString()
                 };
                 
-                const { error } = await supabase
-                    .from('subscriptions')
-                    .upsert(subscriptionData, {
-                        onConflict: 'user_id,endpoint'
-                    });
+                await supabase.from('subscriptions').upsert(subscriptionData, {
+                    onConflict: 'user_id,endpoint'
+                });
                 
-                if (error) {
-                    console.error('❌ Erreur enregistrement abonnement:', error);
-                } else {
-                    console.log('✅ Abonnement enregistré');
-                }
             } catch (error) {
                 console.error('❌ Erreur sauvegarde:', error);
             }
@@ -1185,9 +1451,8 @@
             }
             return window.btoa(binary);
         }
-    </script>
-    
-    <script>
+
+        // Application principale
         const { supabase, getCurrentUser, getUserProfile } = window.supabaseClient;
         let currentUser = null;
         let userProfile = null;
@@ -1221,8 +1486,42 @@
         const searchPanel = document.getElementById('search-panel');
         const searchInput = document.getElementById('search-input');
         const searchBtn = document.getElementById('search-btn');
-        const searchResultsInfo = document.getElementById('search-results-info');
-        const searchResultsCount = document.getElementById('search-results-count');
+
+        searchToggleBtn.addEventListener('click', () => {
+            searchPanel.classList.toggle('show');
+            searchToggleBtn.classList.toggle('active');
+            if (searchPanel.classList.contains('show')) {
+                searchInput.focus();
+            }
+        });
+
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performSearch();
+        });
+
+        async function performSearch() {
+            const query = searchInput.value.trim().toLowerCase();
+            if (!query) {
+                displayArticles(allArticles);
+                document.getElementById('search-results-info').style.display = 'none';
+                isSearching = false;
+                return;
+            }
+            isSearching = true;
+            const filteredArticles = allArticles.filter(article => {
+                const text = article.texte.toLowerCase();
+                const authorName = `${article.users_profile.prenom} ${article.users_profile.nom}`.toLowerCase();
+                return text.includes(query) || authorName.includes(query);
+            });
+            document.getElementById('search-results-count').textContent = filteredArticles.length;
+            document.getElementById('search-results-info').style.display = 'block';
+            displayArticles(filteredArticles);
+            setTimeout(() => {
+                searchPanel.classList.remove('show');
+                searchToggleBtn.classList.remove('active');
+            }, 500);
+        }
 
         const pageManager = {
             loadedPages: new Set(['home']),
@@ -1245,7 +1544,7 @@
                     this.loadedPages.add(pageName);
                 };
                 iframe.onerror = () => {
-                    if (loader) loader.innerHTML = '<p style="color: #ef4444;">Erreur de chargement</p>';
+                    if (loader) loader.innerHTML = '<p style="color: #ef4444;">Erreur</p>';
                 };
                 iframeContainer.appendChild(iframe);
                 this.iframes[pageName] = iframe;
@@ -1256,52 +1555,6 @@
                 }
             }
         };
-
-        searchToggleBtn.addEventListener('click', () => {
-            searchPanel.classList.toggle('show');
-            searchToggleBtn.classList.toggle('active');
-            if (searchPanel.classList.contains('show')) {
-                searchInput.focus();
-            }
-        });
-
-        searchBtn.addEventListener('click', performSearch);
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                performSearch();
-            }
-        });
-
-        async function performSearch() {
-            const query = searchInput.value.trim().toLowerCase();
-            if (!query) {
-                displayArticles(allArticles);
-                searchResultsInfo.style.display = 'none';
-                isSearching = false;
-                return;
-            }
-            isSearching = true;
-            const filteredArticles = allArticles.filter(article => {
-                const text = article.texte.toLowerCase();
-                const authorName = `${article.users_profile.prenom} ${article.users_profile.nom}`.toLowerCase();
-                return text.includes(query) || authorName.includes(query);
-            });
-            searchResultsCount.textContent = filteredArticles.length;
-            searchResultsInfo.style.display = 'block';
-            displayArticles(filteredArticles);
-            setTimeout(() => {
-                searchPanel.classList.remove('show');
-                searchToggleBtn.classList.remove('active');
-            }, 500);
-        }
-
-        searchInput.addEventListener('input', (e) => {
-            if (e.target.value.trim() === '' && isSearching) {
-                displayArticles(allArticles);
-                searchResultsInfo.style.display = 'none';
-                isSearching = false;
-            }
-        });
 
         window.addEventListener('DOMContentLoaded', async () => {
             const manualLogout = sessionStorage.getItem('manualLogout');
@@ -1325,11 +1578,11 @@
                             await loadUserReactions();
                         }
                     } catch (profileError) {
-                        console.warn('⚠️ Erreur profil:', profileError);
+                        console.warn('⚠️ Erreur profil');
                     }
                 }
             } catch (error) {
-                console.error('⚠️ Erreur init:', error);
+                console.error('⚠️ Erreur init');
             }
             
             loadArticles();
@@ -1377,12 +1630,12 @@
         async function loadUserReactions() {
             if (!currentUser) return;
             try {
-                const { data, error } = await supabase
+                const { data } = await supabase
                     .from('article_reactions')
                     .select('article_id, reaction_type')
                     .eq('user_id', currentUser.id);
                 
-                if (error) return;
+                if (!data) return;
                 
                 userReactions = {};
                 data.forEach(reaction => {
@@ -1392,7 +1645,7 @@
                     userReactions[reaction.article_id].push(reaction.reaction_type);
                 });
             } catch (error) {
-                console.warn('⚠️ Exception réactions:', error);
+                console.warn('⚠️ Exception réactions');
             }
         }
 
@@ -1419,6 +1672,12 @@
                 if (!e.target.closest('.menu-dropdown')) {
                     menuContent.classList.remove('show');
                 }
+                if (!e.target.closest('.share-menu') && !e.target.closest('.share-btn')) {
+                    document.querySelectorAll('.share-menu.show').forEach(m => m.classList.remove('show'));
+                }
+                if (!e.target.closest('.admin-options')) {
+                    document.querySelectorAll('.options-menu.show').forEach(menu => menu.classList.remove('show'));
+                }
             });
 
             document.getElementById('logout-item').addEventListener('click', async function(e) {
@@ -1429,7 +1688,6 @@
                     sessionStorage.setItem('manualLogout', 'true');
                     window.location.href = 'connexion.html';
                 } catch (error) {
-                    console.error('Erreur déconnexion:', error);
                     window.location.href = 'connexion.html';
                 }
             });
@@ -1499,7 +1757,7 @@
                     .order('date_created', { ascending: false });
                 
                 if (error) {
-                    document.getElementById('loader').innerHTML = '<p style="color: #ef4444;">Erreur de chargement</p>';
+                    document.getElementById('loader').innerHTML = '<p style="color: #ef4444;">Erreur</p>';
                     return;
                 }
                 
@@ -1513,7 +1771,7 @@
                 allArticles = articles;
                 displayArticles(articles);
             } catch (error) {
-                console.error('❌ Exception articles:', error);
+                console.error('❌ Exception articles');
             }
         }
 
@@ -1521,11 +1779,7 @@
             const container = document.getElementById('articles-container');
             container.innerHTML = '';
             if (articles.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-search"></i>
-                        <h3>Aucun article trouvé</h3>
-                    </div>`;
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><h3>Aucun article</h3></div>';
                 return;
             }
             articles.forEach(article => {
@@ -1625,7 +1879,7 @@
                     <div class="share-btn" onclick="toggleShareMenu(event, '${article.article_id}')">
                         <i class="fas fa-share-alt"></i>
                         <div class="share-menu" id="share-menu-${article.article_id}">
-                            <h4>Partager cet article</h4>
+                            <h4>Partager</h4>
                             <div class="share-options">
                                 <a class="share-option facebook" onclick="shareToFacebook('${article.article_id}')">
                                     <i class="fab fa-facebook"></i>
@@ -1675,13 +1929,17 @@
             }
             
             try {
-                const { data: existing } = await supabase
+                const { data: existing, error: selectError } = await supabase
                     .from('article_reactions')
                     .select('*')
                     .eq('article_id', articleId)
                     .eq('user_id', currentUser.id)
                     .eq('reaction_type', reactionType)
                     .single();
+                
+                if (selectError && selectError.code !== 'PGRST116') {
+                    console.warn('⚠️ Erreur réaction');
+                }
                 
                 if (existing) {
                     await supabase.from('article_reactions').delete().eq('reaction_id', existing.reaction_id);
@@ -1704,7 +1962,7 @@
                 
                 await loadArticles();
             } catch (error) {
-                console.error('❌ Exception réaction:', error);
+                console.error('❌ Exception réaction');
             }
         }
 
@@ -1730,7 +1988,7 @@
                     articlePreview: article.texte.substring(0, 100)
                 };
 
-                const response = await fetch('https://hdtnlfjrliidbvpolfud.supabase.co/functions/v1/send-push-notification', {
+                await fetch('https://hdtnlfjrliidbvpolfud.supabase.co/functions/v1/send-push-notification', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1738,12 +1996,8 @@
                     },
                     body: JSON.stringify(notificationData)
                 });
-
-                if (response.ok) {
-                    console.log('✅ Notification push envoyée');
-                }
             } catch (error) {
-                console.warn('⚠️ Exception notification:', error);
+                console.warn('⚠️ Exception notification');
             }
         }
 
@@ -1765,7 +2019,7 @@
                     .order('date_created', { ascending: false });
                 
                 if (error) {
-                    container.innerHTML = '<p style="color: #ef4444; padding: 20px;">Erreur de chargement</p>';
+                    container.innerHTML = '<p style="color: #ef4444; padding: 20px;">Erreur</p>';
                     return;
                 }
                 
@@ -1775,7 +2029,7 @@
                     container.innerHTML = '<p style="color: #ef4444; padding: 20px;">Widget non chargé</p>';
                 }
             } catch (error) {
-                container.innerHTML = '<p style="color: #ef4444; padding: 20px;">Erreur critique</p>';
+                container.innerHTML = '<p style="color: #ef4444; padding: 20px;">Erreur</p>';
             }
         }
 
@@ -1796,7 +2050,7 @@
 
         function getArticleShareText(articleId) {
             const article = allArticles.find(a => a.article_id === articleId);
-            if (!article) return 'Découvrez cet article sur Connect Ultra';
+            if (!article) return 'Découvrez Connect Ultra';
             const preview = article.texte.substring(0, 100) + (article.texte.length > 100 ? '...' : '');
             return `${preview} - Connect Ultra`;
         }
@@ -1839,7 +2093,7 @@
                     title: 'Connect Ultra',
                     text: getArticleShareText(articleId),
                     url: getArticleShareUrl(articleId)
-                }).catch(err => console.log('Erreur:', err));
+                }).catch(err => console.log('Erreur'));
             } else {
                 copyArticleLink(articleId);
                 alert('Lien copié !');
@@ -1848,7 +2102,11 @@
 
         function copyArticleLink(articleId) {
             const url = getArticleShareUrl(articleId);
-            navigator.clipboard.writeText(url);
+            navigator.clipboard.writeText(url).then(() => {
+                console.log('Lien copié');
+            }).catch(err => {
+                console.error('Erreur copie');
+            });
         }
 
         function toggleAdminMenu(menuId) {
@@ -1860,58 +2118,34 @@
             document.getElementById(menuId)?.classList.toggle('show');
         }
 
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.admin-options')) {
-                document.querySelectorAll('.options-menu.show').forEach(menu => menu.classList.remove('show'));
-            }
-            if (!event.target.closest('.share-menu') && !event.target.closest('.share-btn')) {
-                document.querySelectorAll('.share-menu.show').forEach(m => m.classList.remove('show'));
-            }
-        });
-
         function editArticle(articleId) {
             window.location.href = `edit-article.html?id=${articleId}`;
         }
 
         async function deleteArticle(articleId) {
-            if (!confirm("Supprimer cet article définitivement ?")) return;
-            
-            try {
-                const { error } = await supabase.from('articles').delete().eq('article_id', articleId);
-                if (error) {
-                    alert("Erreur lors de la suppression.");
-                    return;
+            if (confirm("Supprimer cet article ?")) {
+                try {
+                    const { error } = await supabase.from('articles').delete().eq('article_id', articleId);
+                    if (error) {
+                        alert("Erreur de suppression.");
+                        return;
+                    }
+                    alert("Article supprimé.");
+                    loadArticles();
+                } catch (error) {
+                    alert("Erreur critique.");
                 }
-                alert("Article supprimé.");
-                loadArticles();
-            } catch (error) {
-                alert("Erreur critique.");
             }
         }
 
         function viewUserReactions(articleId) {
             if (!currentUser || !userProfile) {
-                alert('Connectez-vous pour voir les réactions');
+                alert('Connectez-vous');
                 window.location.href = 'connexion.html';
                 return;
             }
             window.location.href = `usereact.html?article_id=${articleId}`;
         }
-
-        window.handleReaction = handleReaction;
-        window.toggleComments = toggleComments;
-        window.toggleShareMenu = toggleShareMenu;
-        window.shareToFacebook = shareToFacebook;
-        window.shareToTwitter = shareToTwitter;
-        window.shareToWhatsApp = shareToWhatsApp;
-        window.shareToTelegram = shareToTelegram;
-        window.shareToInstagram = shareToInstagram;
-        window.shareToTikTok = shareToTikTok;
-        window.shareToMore = shareToMore;
-        window.toggleAdminMenu = toggleAdminMenu;
-        window.editArticle = editArticle;
-        window.deleteArticle = deleteArticle;
-        window.viewUserReactions = viewUserReactions;
 
         async function loadNotificationCount() {
             if (!currentUser) return;
@@ -1951,7 +2185,20 @@
             } catch (error) {}
         }
 
+        window.viewUserReactions = viewUserReactions;
+        window.toggleAdminMenu = toggleAdminMenu;
+        window.editArticle = editArticle;
+        window.deleteArticle = deleteArticle;
         window.handleReaction = handleReaction;
+        window.toggleComments = toggleComments;
+        window.toggleShareMenu = toggleShareMenu;
+        window.shareToFacebook = shareToFacebook;
+        window.shareToTwitter = shareToTwitter;
+        window.shareToWhatsApp = shareToWhatsApp;
+        window.shareToTelegram = shareToTelegram;
+        window.shareToInstagram = shareToInstagram;
+        window.shareToTikTok = shareToTikTok;
+        window.shareToMore = shareToMore;
         
         setInterval(() => {
             if (currentUser) {
