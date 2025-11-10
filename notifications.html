@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messages Spirituels - Notifications</title>
+    <title>World Connect - Notifications</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -14,258 +15,161 @@
         }
 
         body {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            background: linear-gradient(135deg, #8B0000 0%, #DC143C 25%, #FF6347 50%, #FFD700 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-            padding: 20px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0e27;
             min-height: 100vh;
             position: relative;
+            overflow-x: hidden;
         }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        body::before {
-            content: '';
-            position: absolute;
+        #threejs-canvas {
+            position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(255, 192, 203, 0.2) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 50%, rgba(34, 139, 34, 0.2) 0%, transparent 50%);
-            animation: pulseAura 8s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes pulseAura {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.05); }
+            width: 100%;
+            height: 100%;
+            z-index: 0;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             position: relative;
             z-index: 1;
+            padding: 0 20px;
         }
 
         .header {
-            background: linear-gradient(135deg, rgba(139, 0, 0, 0.95), rgba(220, 20, 60, 0.95));
-            padding: 30px;
-            border-radius: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3),
-                        0 0 40px rgba(255, 215, 0, 0.2);
+            background: linear-gradient(135deg, #6b7c4a 0%, #8a9d5f 100%);
+            padding: 0 40px;
+            height: 80px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 3px solid rgba(255, 215, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-            animation: slideDown 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header::before {
-            content: '✧';
-            position: absolute;
-            font-size: 80px;
-            color: rgba(255, 215, 0, 0.15);
-            top: -15px;
-            right: 20px;
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
         }
 
         .header h1 {
-            color: #FFD700;
-            font-size: 28px;
+            color: #ffffff;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
-            gap: 15px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-            font-weight: 800;
+            gap: 12px;
         }
 
         .header h1 i {
-            color: #FFD700;
-            animation: bellRing 2s ease-in-out infinite;
-        }
-
-        @keyframes bellRing {
-            0%, 100% { transform: rotate(0deg); }
-            10%, 30% { transform: rotate(-10deg); }
-            20%, 40% { transform: rotate(10deg); }
-            50% { transform: rotate(0deg); }
+            font-size: 28px;
         }
 
         .mark-all-btn {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            color: #8B0000;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 24px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: 800;
-            transition: all 0.4s ease;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
         }
 
         .mark-all-btn:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
-            background: linear-gradient(135deg, #FFA500 0%, #FFD700 100%);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
         }
 
-        .mark-all-btn:active {
-            transform: translateY(-2px) scale(1.02);
+        .content-wrapper {
+            padding: 40px 0;
         }
 
         .tabs {
             display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-            animation: fadeIn 0.8s ease-out 0.2s both;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            gap: 12px;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
         }
 
         .tab {
             flex: 1;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.95);
-            border: 3px solid #FFD700;
-            border-radius: 15px;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: 700;
-            color: #8B0000;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+            font-size: 14px;
         }
 
         .tab:hover {
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
-            border-color: #DC143C;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .tab.active {
-            background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
-            color: #FFD700;
-            border-color: #FFD700;
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
+            background: rgba(107, 124, 74, 0.4);
+            color: #ffffff;
         }
 
         .filter-info {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 228, 196, 0.95));
-            padding: 18px 25px;
-            border-radius: 15px;
-            margin-bottom: 25px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 20px 28px;
+            border-radius: 12px;
+            margin-bottom: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            border: 2px solid rgba(255, 215, 0, 0.4);
-            animation: fadeIn 0.8s ease-out 0.3s both;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .filter-info span {
-            color: #8B0000;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            font-size: 15px;
         }
 
         .count-badge {
-            background: linear-gradient(135deg, #DC143C, #8B0000);
-            color: #FFD700;
-            padding: 6px 15px;
+            background: linear-gradient(135deg, #6b7c4a, #8a9d5f);
+            color: #ffffff;
+            padding: 6px 16px;
             border-radius: 20px;
-            font-size: 14px;
-            font-weight: 800;
-            box-shadow: 0 3px 10px rgba(139, 0, 0, 0.3);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            font-size: 13px;
+            font-weight: 700;
         }
 
         .notifications-list {
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            animation: fadeIn 0.8s ease-out 0.4s both;
+            gap: 16px;
         }
 
         .notification-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 250, 240, 0.98));
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
             display: flex;
             gap: 20px;
             align-items: flex-start;
             cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            border: 2px solid transparent;
-            animation: cardSlideIn 0.6s ease-out backwards;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
         }
-
-        @keyframes cardSlideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .notification-card:nth-child(1) { animation-delay: 0.1s; }
-        .notification-card:nth-child(2) { animation-delay: 0.2s; }
-        .notification-card:nth-child(3) { animation-delay: 0.3s; }
-        .notification-card:nth-child(4) { animation-delay: 0.4s; }
-        .notification-card:nth-child(5) { animation-delay: 0.5s; }
 
         .notification-card::before {
             content: '';
@@ -273,63 +177,58 @@
             left: 0;
             top: 0;
             bottom: 0;
-            width: 6px;
+            width: 4px;
             background: transparent;
             transition: all 0.3s;
         }
 
         .notification-card.unread {
-            background: linear-gradient(135deg, rgba(255, 245, 230, 0.98), rgba(255, 228, 196, 0.98));
-            border-color: rgba(255, 215, 0, 0.3);
+            background: rgba(107, 124, 74, 0.15);
+            border-color: rgba(107, 124, 74, 0.3);
         }
 
         .notification-card.unread::before {
-            background: linear-gradient(to bottom, #DC143C, #FFD700);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            background: linear-gradient(to bottom, #6b7c4a, #8a9d5f);
         }
 
         .notification-card:hover {
-            transform: translateX(10px) translateY(-5px) scale(1.02);
-            box-shadow: 0 12px 35px rgba(139, 0, 0, 0.25),
-                        0 0 30px rgba(255, 215, 0, 0.2);
-            border-color: #FFD700;
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(8px);
+            border-color: rgba(107, 124, 74, 0.5);
         }
 
         .notif-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(107, 124, 74, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #FFD700;
-            font-size: 24px;
+            color: #8a9d5f;
+            font-size: 22px;
             flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
-            transition: all 0.4s ease;
-            animation: iconPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes iconPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); box-shadow: 0 6px 20px rgba(139, 0, 0, 0.5); }
+            transition: all 0.3s ease;
         }
 
         .notification-card:hover .notif-icon {
-            transform: rotate(15deg) scale(1.15);
+            transform: scale(1.1);
+            background: rgba(107, 124, 74, 0.5);
         }
 
         .notif-icon.reaction {
-            background: linear-gradient(135deg, #FF1493, #FF69B4);
+            background: rgba(255, 20, 147, 0.2);
+            color: #ff69b4;
         }
 
         .notif-icon.comment {
-            background: linear-gradient(135deg, #32CD32, #228B22);
+            background: rgba(50, 205, 50, 0.2);
+            color: #32cd32;
         }
 
         .notif-icon.reply {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
         }
 
         .notif-content {
@@ -337,20 +236,18 @@
         }
 
         .notif-text {
-            color: #333;
-            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
             margin-bottom: 12px;
             font-size: 15px;
-            font-weight: 500;
         }
 
         .notif-meta {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 16px;
             font-size: 13px;
-            color: #8B0000;
-            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .notif-time {
@@ -359,118 +256,86 @@
             gap: 6px;
         }
 
-        .notif-time i {
-            color: #FFD700;
-        }
-
         .notif-badge {
-            background: linear-gradient(135deg, #DC143C, #FF6347);
+            background: linear-gradient(135deg, #6b7c4a, #8a9d5f);
             color: white;
             padding: 4px 12px;
-            border-radius: 15px;
+            border-radius: 12px;
             font-size: 11px;
-            font-weight: 800;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            box-shadow: 0 2px 8px rgba(220, 20, 60, 0.4);
-            animation: badgePulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes badgePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
         }
 
         .delete-btn {
-            background: linear-gradient(135deg, #FF6347, #DC143C);
+            background: rgba(220, 53, 69, 0.2);
             border: none;
-            color: white;
+            color: #dc3545;
             cursor: pointer;
             font-size: 18px;
             padding: 10px 12px;
-            border-radius: 10px;
-            transition: all 0.4s ease;
-            box-shadow: 0 3px 10px rgba(220, 20, 60, 0.3);
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
 
         .delete-btn:hover {
-            transform: scale(1.2) rotate(10deg);
-            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.5);
-        }
-
-        .delete-btn:active {
-            transform: scale(1.1) rotate(5deg);
+            background: rgba(220, 53, 69, 0.3);
+            transform: scale(1.1);
         }
 
         .loader {
             text-align: center;
             padding: 80px 20px;
-            animation: fadeIn 0.5s ease-out;
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .spinner {
-            border: 4px solid rgba(255, 215, 0, 0.3);
-            border-top: 4px solid #DC143C;
-            border-right: 4px solid #FFD700;
-            border-bottom: 4px solid #228B22;
+            border: 3px solid rgba(107, 124, 74, 0.2);
+            border-top: 3px solid #8a9d5f;
             border-radius: 50%;
             width: 50px;
             height: 50px;
-            animation: spinMulticolor 1s linear infinite;
+            animation: spin 1s linear infinite;
             margin: 0 auto 20px;
         }
 
-        @keyframes spinMulticolor {
+        @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        .loader p {
-            color: #8B0000;
-            font-weight: 700;
-            font-size: 15px;
         }
 
         .empty-state {
             text-align: center;
             padding: 100px 20px;
-            color: rgba(139, 0, 0, 0.7);
-            animation: fadeIn 0.8s ease-out;
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .empty-state i {
-            font-size: 100px;
+            font-size: 80px;
             margin-bottom: 25px;
-            color: rgba(255, 215, 0, 0.4);
-            animation: sway 3s ease-in-out infinite;
-        }
-
-        @keyframes sway {
-            0%, 100% { transform: rotate(-5deg); }
-            50% { transform: rotate(5deg); }
+            color: rgba(107, 124, 74, 0.4);
         }
 
         .empty-state h3 {
-            color: #8B0000;
+            color: rgba(255, 255, 255, 0.8);
             margin-bottom: 15px;
             font-size: 24px;
-            font-weight: 800;
+            font-weight: 700;
         }
 
         .empty-state p {
             font-size: 16px;
-            font-style: italic;
+            color: rgba(255, 255, 255, 0.5);
         }
 
         @media (max-width: 768px) {
             .header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
+                padding: 0 20px;
+                height: 70px;
             }
 
             .header h1 {
-                font-size: 24px;
+                font-size: 20px;
             }
 
             .tabs {
@@ -478,82 +343,174 @@
             }
 
             .notification-card {
-                padding: 20px;
+                padding: 18px;
             }
 
             .notif-icon {
-                width: 50px;
-                height: 50px;
+                width: 45px;
+                height: 45px;
                 font-size: 20px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 15px;
-            }
-
-            .header h1 {
-                font-size: 20px;
-            }
-
-            .notification-card {
-                gap: 15px;
-            }
-
-            .notif-meta {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
             }
         }
     </style>
 </head>
 <body>
+    <canvas id="threejs-canvas"></canvas>
+
+    <div class="header">
+        <h1>
+            <i class="fas fa-globe"></i>
+            World Connect
+        </h1>
+        <button class="mark-all-btn" onclick="markAllAsRead()" id="mark-all-btn">
+            <i class="fas fa-check-double"></i> Tout marquer lu
+        </button>
+    </div>
+
     <div class="container">
-        <div class="header">
-            <h1>
-                <i class="fas fa-bell"></i>
-                Messages Spirituels
-            </h1>
-            <button class="mark-all-btn" onclick="markAllAsRead()" id="mark-all-btn">
-                <i class="fas fa-check-double"></i> Tout marquer
-            </button>
-        </div>
+        <div class="content-wrapper">
+            <div class="tabs">
+                <button class="tab active" onclick="filterNotifications('all')">
+                    <i class="fas fa-list"></i> Toutes
+                </button>
+                <button class="tab" onclick="filterNotifications('unread')">
+                    <i class="fas fa-envelope"></i> Non Lues
+                </button>
+                <button class="tab" onclick="filterNotifications('read')">
+                    <i class="fas fa-envelope-open"></i> Lues
+                </button>
+            </div>
 
-        <div class="tabs">
-            <button class="tab active" onclick="filterNotifications('all')">
-                <i class="fas fa-list"></i> Toutes
-            </button>
-            <button class="tab" onclick="filterNotifications('unread')">
-                <i class="fas fa-envelope"></i> Non Lues
-            </button>
-            <button class="tab" onclick="filterNotifications('read')">
-                <i class="fas fa-envelope-open"></i> Lues
-            </button>
-        </div>
+            <div class="filter-info" id="filter-info">
+                <span id="filter-text">Toutes les notifications</span>
+                <span class="count-badge" id="notif-count">0</span>
+            </div>
 
-        <div class="filter-info" id="filter-info">
-            <span id="filter-text">Tous les messages spirituels</span>
-            <span class="count-badge" id="notif-count">0</span>
-        </div>
+            <div id="loader" class="loader">
+                <div class="spinner"></div>
+                <p>Chargement des notifications...</p>
+            </div>
 
-        <div id="loader" class="loader">
-            <div class="spinner"></div>
-            <p>Chargement des messages sacrés...</p>
-        </div>
+            <div class="notifications-list" id="notifications-list"></div>
 
-        <div class="notifications-list" id="notifications-list"></div>
-
-        <div class="empty-state" id="empty-state" style="display: none;">
-            <i class="fas fa-bell-slash"></i>
-            <h3>Aucun Message</h3>
-            <p>Vous n'avez reçu aucun message spirituel pour le moment</p>
+            <div class="empty-state" id="empty-state" style="display: none;">
+                <i class="fas fa-bell-slash"></i>
+                <h3>Aucune Notification</h3>
+                <p>Vous n'avez reçu aucune notification pour le moment</p>
+            </div>
         </div>
     </div>
 
     <script src="supabaseClient.js"></script>
     <script>
+        // Three.js Animation
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ 
+            canvas: document.getElementById('threejs-canvas'),
+            alpha: true,
+            antialias: true
+        });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000, 0);
+        camera.position.z = 30;
+
+        // Create "World Connect" text particles
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 2000;
+        const positions = new Float32Array(particlesCount * 3);
+        const colors = new Float32Array(particlesCount * 3);
+
+        for (let i = 0; i < particlesCount * 3; i += 3) {
+            positions[i] = (Math.random() - 0.5) * 100;
+            positions[i + 1] = (Math.random() - 0.5) * 100;
+            positions[i + 2] = (Math.random() - 0.5) * 100;
+
+            // Blue color with variations
+            colors[i] = 0.2 + Math.random() * 0.3;
+            colors[i + 1] = 0.4 + Math.random() * 0.4;
+            colors[i + 2] = 0.8 + Math.random() * 0.2;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.3,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+
+        const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particles);
+
+        // Create text geometry for "World Connect"
+        const textParticles = new THREE.Group();
+        const textConfig = [
+            { text: 'WORLD', yOffset: 2 },
+            { text: 'CONNECT', yOffset: -2 }
+        ];
+
+        textConfig.forEach(config => {
+            const textGeometry = new THREE.BufferGeometry();
+            const textPositions = [];
+            const textColors = [];
+            
+            for (let i = 0; i < 300; i++) {
+                textPositions.push(
+                    (Math.random() - 0.5) * 15,
+                    config.yOffset + (Math.random() - 0.5) * 2,
+                    (Math.random() - 0.5) * 5
+                );
+                textColors.push(0.3, 0.5, 1);
+            }
+
+            textGeometry.setAttribute('position', new THREE.Float32BufferAttribute(textPositions, 3));
+            textGeometry.setAttribute('color', new THREE.Float32BufferAttribute(textColors, 3));
+
+            const textMaterial = new THREE.PointsMaterial({
+                size: 0.4,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.9,
+                blending: THREE.AdditiveBlending
+            });
+
+            const textMesh = new THREE.Points(textGeometry, textMaterial);
+            textParticles.add(textMesh);
+        });
+
+        scene.add(textParticles);
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            particles.rotation.x += 0.0005;
+            particles.rotation.y += 0.001;
+
+            textParticles.rotation.y += 0.002;
+
+            const positions = particles.geometry.attributes.position.array;
+            for (let i = 1; i < positions.length; i += 3) {
+                positions[i] += Math.sin(Date.now() * 0.001 + i) * 0.01;
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Notification System
         const { supabase, getCurrentUser } = window.supabaseClient;
         let currentUser = null;
         let allNotifications = [];
@@ -587,7 +544,7 @@
 
             } catch (error) {
                 console.error('Erreur:', error);
-                document.getElementById('loader').innerHTML = '<p style="color: #DC143C;">Erreur de chargement des messages</p>';
+                document.getElementById('loader').innerHTML = '<p>Erreur de chargement</p>';
             }
         }
 
@@ -608,14 +565,14 @@
             }
 
             let filtered = allNotifications;
-            let filterText = 'Tous les messages spirituels';
+            let filterText = 'Toutes les notifications';
 
             if (filter === 'unread') {
                 filtered = allNotifications.filter(n => !n.read_status);
-                filterText = 'Messages non lus';
+                filterText = 'Notifications non lues';
             } else if (filter === 'read') {
                 filtered = allNotifications.filter(n => n.read_status);
-                filterText = 'Messages lus';
+                filterText = 'Notifications lues';
             }
 
             document.getElementById('filter-text').textContent = filterText;
@@ -698,7 +655,7 @@
             } else if (textLower.includes('message')) {
                 return 'fas fa-envelope';
             } else {
-                return 'fas fa-info-circle';
+                return 'fas fa-bell';
             }
         }
 
@@ -723,14 +680,8 @@
             const minutes = Math.floor(seconds / 60);
             const hours = Math.floor(minutes / 60);
             const days = Math.floor(hours / 24);
-            const months = Math.floor(days / 30);
-            const years = Math.floor(days / 365);
 
-            if (years > 0) {
-                return `Il y a ${years} an${years > 1 ? 's' : ''}`;
-            } else if (months > 0) {
-                return `Il y a ${months} mois`;
-            } else if (days > 0) {
+            if (days > 0) {
                 return `Il y a ${days} jour${days > 1 ? 's' : ''}`;
             } else if (hours > 0) {
                 return `Il y a ${hours} heure${hours > 1 ? 's' : ''}`;
@@ -767,14 +718,14 @@
 
             } catch (error) {
                 console.error('Erreur:', error);
-                alert('Erreur lors de la mise à jour des messages');
+                alert('Erreur lors de la mise à jour');
             }
         }
 
         async function deleteNotification(notificationId, event) {
             event.stopPropagation();
 
-            if (!confirm('Voulez-vous vraiment supprimer ce message spirituel ?')) {
+            if (!confirm('Voulez-vous vraiment supprimer cette notification ?')) {
                 return;
             }
 
@@ -788,7 +739,7 @@
 
             } catch (error) {
                 console.error('Erreur:', error);
-                alert('Erreur lors de la suppression du message');
+                alert('Erreur lors de la suppression');
             }
         }
 
