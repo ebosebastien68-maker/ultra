@@ -1,7 +1,7 @@
 {
-  "name": "Secret de nos Aïeux",
-  "short_name": "Secret Aïeux",
-  "description": "Découvrez les secrets et l'histoire de nos ancêtres. Plateforme de partage culturel et historique.",
+  "name": "World Connect",
+  "short_name": "World Connect",
+  "description": "Donner Vie à vos projets le plus rapide possible .",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
