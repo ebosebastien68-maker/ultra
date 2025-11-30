@@ -1,7 +1,7 @@
 {
   "name": "World Connect",
-  "short_name": "Connect Ultra",
-  "description": "Donner Vie à vos projets le plus rapide possible .",
+  "short_name": "World Connect",
+  "description": "Créer votre digital le Professionnel et le plus Rapide Possible.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
